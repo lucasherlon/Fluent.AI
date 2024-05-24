@@ -13,12 +13,10 @@ import (
  )
 
 func main(){
-
+ // carregando a chave da API gravada no aquivo .env
   erro := godotenv.Load(".env") 
-
   if erro != nil {
     fmt.Println("Error loading .env file:", erro)
-
   }
 
   ctx := context.Background()
@@ -29,16 +27,14 @@ func main(){
   }
   defer client.Close()
 
-  model := client.GenerativeModel("gemini-1.5-flash-latest")
+  model := client.GenerativeModel("gemini-1.5-flash-latest") // escolhendo o modelo
 
   for {
      reader := bufio.NewReader(os.Stdin)
      fmt.Println(">> Pergunte-me qualquer coisa: ")
 
      input, _ := reader.ReadString('\n')
-     fmt.Println(input)
-
-
+     
      resp, err := model.GenerateContent(ctx, genai.Text(input))
   
      if err != nil {
@@ -48,8 +44,6 @@ func main(){
      printResponse(resp)
 
   }
-
- 
 }
 
 func printResponse(resp *genai.GenerateContentResponse) {
