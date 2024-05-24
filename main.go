@@ -5,6 +5,7 @@ import (
     "os"
     "fmt"
     "context"
+    "bufio"
 
     "github.com/google/generative-ai-go/genai"
     "google.golang.org/api/option"
@@ -30,14 +31,25 @@ func main(){
 
   model := client.GenerativeModel("gemini-1.5-flash-latest")
 
-  resp, err := model.GenerateContent(ctx, genai.Text("Quais a vantagens de se usar programação funcional?"))
-  
-  if err != nil {
-    log.Fatal(err)
-  }
-  
-  printResponse(resp)
+  for {
+     reader := bufio.NewReader(os.Stdin)
+     fmt.Println(">> Pergunte-me qualquer coisa: ")
 
+     input, _ := reader.ReadString('\n')
+     fmt.Println(input)
+
+
+     resp, err := model.GenerateContent(ctx, genai.Text(input))
+  
+     if err != nil {
+        log.Fatal(err)
+     }
+  
+     printResponse(resp)
+
+  }
+
+ 
 }
 
 func printResponse(resp *genai.GenerateContentResponse) {
@@ -48,5 +60,6 @@ func printResponse(resp *genai.GenerateContentResponse) {
 			}
 		}
 	}
-	fmt.Println("---")
+	fmt.Println("----------------------------------------")
+  fmt.Println("")
 }
