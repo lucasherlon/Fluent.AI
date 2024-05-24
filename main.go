@@ -13,10 +13,20 @@ import (
  )
 
 func main(){
- // carregando a chave da API gravada no aquivo .env
+  arguments := os.Args
+
+  var idiomaSaida string
+  if len(arguments) > 1 {
+    idiomaSaida = arguments[1]
+  } else {
+    idiomaSaida = "português brasileiro"
+  }
+
   erro := godotenv.Load(".env") 
+
   if erro != nil {
     fmt.Println("Error loading .env file:", erro)
+
   }
 
   ctx := context.Background()
@@ -27,15 +37,17 @@ func main(){
   }
   defer client.Close()
 
-  model := client.GenerativeModel("gemini-1.5-flash-latest") // escolhendo o modelo
+  model := client.GenerativeModel("gemini-1.5-flash-latest")
+  
 
   for {
      reader := bufio.NewReader(os.Stdin)
-     fmt.Println(">> Pergunte-me qualquer coisa: ")
+     fmt.Println(">> Insira o texto que você deseja traduzir: ")
 
      input, _ := reader.ReadString('\n')
-     
-     resp, err := model.GenerateContent(ctx, genai.Text(input))
+     prompt := fmt.Sprintf("Por gentileza, traduza o seguinte texto para o %v: %v",idiomaSaida, input)
+
+     resp, err := model.GenerateContent(ctx, genai.Text(prompt))
   
      if err != nil {
         log.Fatal(err)
@@ -44,6 +56,7 @@ func main(){
      printResponse(resp)
 
   }
+ 
 }
 
 func printResponse(resp *genai.GenerateContentResponse) {
@@ -54,6 +67,6 @@ func printResponse(resp *genai.GenerateContentResponse) {
 			}
 		}
 	}
-	fmt.Println("----------------------------------------")
+	fmt.Println("-------------------------------------------------")
   fmt.Println("")
 }
