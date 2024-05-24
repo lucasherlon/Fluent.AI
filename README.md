@@ -1,1 +1,1 @@
-## Cliente da API do Google implementado em GO
+## Cliente da API do Google AI implementado em GO
