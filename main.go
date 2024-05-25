@@ -60,6 +60,7 @@ func main(){
 }
 
 func printResponse(resp *genai.GenerateContentResponse) {
+	fmt.Println("")
 	for _, cand := range resp.Candidates {
 		if cand.Content != nil {
 			for _, part := range cand.Content.Parts {
