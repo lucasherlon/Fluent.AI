@@ -1,4 +1,4 @@
-## Cliente da API do Google implementado em GO usado para traduzir textos
+## Cliente da API do Google implementado em Go usado para traduzir textos
 - requer a versão 1.22.3 da linguegem Go
 - Para criar o executável do programa basta abrir o terminal na pasta do programa e digitar o seguinte comando:
 
