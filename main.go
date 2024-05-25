@@ -13,52 +13,53 @@ import (
  )
 
 func main(){
-  arguments := os.Args
+    arguments := os.Args
 
-  var idiomaSaida string
-  if len(arguments) > 1 {
-    idiomaSaida = arguments[1]
-  } else {
-    idiomaSaida = "português brasileiro"
-  }
+    var idiomaSaida string
+    if len(arguments) > 1 {
+      idiomaSaida = arguments[1]
+    } else {
+      idiomaSaida = "português brasileiro"
+    }
 
-  erro := godotenv.Load(".env") 
+    erro := godotenv.Load(".env")
 
-  if erro != nil {
-    fmt.Println("Error loading .env file:", erro)
-
-  }
-
-  ctx := context.Background()
-
-  client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("GEMINI_KEY")))
-  if err != nil {
-    log.Fatal(err)
-  }
-  defer client.Close()
-
-  model := client.GenerativeModel("gemini-1.5-flash-latest")
-  
-
-  for {
-     reader := bufio.NewReader(os.Stdin)
-     fmt.Println(">> Insira o texto que você deseja traduzir: ")
-
-     input, _ := reader.ReadString('\n')
-     prompt := fmt.Sprintf("Por gentileza, traduza o seguinte texto para o %v: %v",idiomaSaida, input)
-
-     resp, err := model.GenerateContent(ctx, genai.Text(prompt))
-  
-     if err != nil {
-        log.Fatal(err)
-     }
-  
-     printResponse(resp)
-
-  }
- 
+    if erro != nil {
+      fmt.Println("Error loading .env file:", erro)
+    }
+    generatePrompt(idiomaSaida)
 }
 
+// Generate the prompt to be translated
+func generatePrompt(idiomaSaida string) {
+
+    ctx := context.Background()
+
+    client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("GEMINI_KEY")))
+    if err != nil {
+      log.Fatal(err)
+    }
+    defer client.Close()
+
+    model := client.GenerativeModel("gemini-1.5-flash-latest")
+
+    for {
+      reader := bufio.NewReader(os.Stdin)
+      fmt.Println(">> Insira o texto que você deseja traduzir: ")
+
+      input, _ := reader.ReadString('\n')
+      prompt := fmt.Sprintf("Por gentileza, traduza o seguinte texto para o %v: %v",idiomaSaida, input)
+
+      resp, err := model.GenerateContent(ctx, genai.Text(prompt))
+
+      if err != nil {
+          log.Fatal(err)
+      }
+      printResponse(resp)
+    }
+}
+
+// Show the response generatad from the model
 func printResponse(resp *genai.GenerateContentResponse) {
 	fmt.Println("")
 	for _, cand := range resp.Candidates {
