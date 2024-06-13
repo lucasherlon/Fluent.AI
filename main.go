@@ -8,6 +8,16 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func init() {
+
+	erro := godotenv.Load(".env")
+
+	if erro != nil {
+		fmt.Println("Error loading .env file:", erro)
+		os.Exit(1)
+	}
+}
+
 func main() {
 	arguments := os.Args
 
@@ -18,10 +28,5 @@ func main() {
 		idiomaSaida = "português brasileiro"
 	}
 
-	erro := godotenv.Load(".env")
-
-	if erro != nil {
-		fmt.Println("Error loading .env file:", erro)
-	}
 	gemini.GeneratePrompt(idiomaSaida)
 }
