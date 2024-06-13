@@ -12,5 +12,5 @@
     ```
     ./fluent_ai francês
     ```
-## Estilo
+## Interface
 - Essa aplicação utiliza os frameworks [Bubble Tea](https://github.com/charmbracelet/bubbletea) e [Lipgloss](https://github.com/charmbracelet/lipgloss) para estilizar a interface de linha de comando.
