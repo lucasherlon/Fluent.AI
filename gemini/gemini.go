@@ -1,7 +1,6 @@
 package gemini
 
 import (
-	"bufio"
 	"context"
 	"fmt"
 	"log"
@@ -12,7 +11,7 @@ import (
 )
 
 // Generate the prompt to be translated
-func GeneratePrompt(idiomaSaida string) {
+func GeneratePrompt(input, idiomaSaida string) string {
 
 	ctx := context.Background()
 
@@ -23,33 +22,27 @@ func GeneratePrompt(idiomaSaida string) {
 	defer client.Close()
 
 	model := client.GenerativeModel("gemini-1.5-flash-latest")
+	prompt := fmt.Sprintf("Traduza o seguinte texto para o %s, por favor: %s", idiomaSaida, input)
 
-	for {
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Println(">> Insira o texto que você deseja traduzir: ")
+	resp, err := model.GenerateContent(ctx, genai.Text(prompt))
 
-		input, _ := reader.ReadString('\n')
-		prompt := fmt.Sprintf("Por gentileza, traduza o seguinte texto para o %v: %v", idiomaSaida, input)
-
-		resp, err := model.GenerateContent(ctx, genai.Text(prompt))
-
-		if err != nil {
-			log.Fatal(err)
-		}
-		printResponse(resp)
+	if err != nil {
+		return "Erro ao processar traduçao"
 	}
+	response := stringfyResponse(resp)
+	return response
+
 }
 
-// Show the response generatad from the model
-func printResponse(resp *genai.GenerateContentResponse) {
-	fmt.Println("")
+// Show the response generatade from the model
+func stringfyResponse(resp *genai.GenerateContentResponse) string {
+	var response string
 	for _, cand := range resp.Candidates {
 		if cand.Content != nil {
 			for _, part := range cand.Content.Parts {
-				fmt.Println(part)
+				response += fmt.Sprintf("%s", part)
 			}
 		}
 	}
-	fmt.Println("-------------------------------------------------")
-	fmt.Println("")
+	return response
 }

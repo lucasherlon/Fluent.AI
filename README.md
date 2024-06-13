@@ -6,9 +6,11 @@
   go build
   ```
 - Utiliza o modelo Gemini 1.5
-- Necessita de uma [chave do Google AI](https://aistudio.google.com/app/apikey) salva em uma variável de ambiente chamada GEMINI_KEY guardada em arquivo .env na pasta do projeto
+- Necessita de uma [chave do Google AI](https://aistudio.google.com/app/apikey) salva em uma variável de ambiente chamada GEMINI_KEY guardada em arquivo .env na pasta principal do projeto
 - Traduz para o português brasileiro por padrão, mas pode receber outro idioma de saída passado como argumento de linha de comando:
 
     ```
     ./fluent_ai francês
     ```
+## Estilo
+- Essa aplicação utiliza os frameworks [Bubble Tea](https://github.com/charmbracelet/bubbletea) e [Lipgloss](https://github.com/charmbracelet/lipgloss) para estilizar a interface de linha de comando.
